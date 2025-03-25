@@ -1,7 +1,7 @@
 plugins {
     id 'java'
     id 'jacoco'
-    id 'io.qameta.allure-report' version "2.11.0"
+    id 'io.qameta.allure-report' version "2.11.2"
 }
 
 group = 'org.usvm'
@@ -23,8 +23,7 @@ dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter'
     testImplementation("org.mockito:mockito-core:5.15.2")
 
-    testImplementation platform("io.qameta.allure:allure-bom:2.25.0")
-    testImplementation "io.qameta.allure:allure-junit5"
+    testImplementation "io.qameta.allure:allure-junit5:2.25.0"
 
 }
 
