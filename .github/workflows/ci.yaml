@@ -2,9 +2,9 @@ name: test-report
 
 on:
   push:
-    branches: [ "hw" ]
+    branches: [ "main" ]
   pull_request:
-    branches: [ "hw" ]
+    branches: [ "main" ]
 
 jobs:
   build:
@@ -40,6 +40,7 @@ jobs:
       contents: read
 
     steps:
+      - uses: actions/checkout@v4
       - name: Build and test with Gradle
         run: ./gradlew clean test
 
@@ -62,6 +63,7 @@ jobs:
       contents: write
 
     steps:
+      - uses: actions/checkout@v4
       - name: Generate Allure Report (Gradle)
         run: ./gradlew clean test allureReport
 
