@@ -2,9 +2,9 @@ name: test-report
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "main", "hw" ]
   pull_request:
-    branches: [ "main" ]
+    branches: [ "main", "hw" ]
 
 jobs:
   build:
@@ -25,10 +25,6 @@ jobs:
         with:
           gradle-version: "8.10"
 
-  test-and-coverage:
-    runs-on: ubuntu-latest
-
-    steps:
       - name: Build and test with Gradle
         run: gradle build
 
@@ -44,10 +40,6 @@ jobs:
           name: jacoco-report
           path: build/reports/jacoco/test/html/
 
-  allure-generate:
-    runs-on: ubuntu-latest
-
-    steps:
       - name: Generate Allure Report (Gradle)
         run: gradle allureReport
 
