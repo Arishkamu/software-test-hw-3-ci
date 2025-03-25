@@ -64,22 +64,6 @@ jobs:
           name: jacoco-report
           path: build/reports/jacoco/test/html/
 
-      - name: Load test report history
-        uses: actions/checkout@v4
-        if: always()
-        continue-on-error: true
-        with:
-          ref: gh-pages
-          path: gh-pages
-
-      - name: Deploy JaCoCo Report to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3
-        if: always()
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_branch: gh-pages
-          publish_dir: build/reports/jacoco/test/jacocoTestReport.xml
-
   spotless:
     needs: build
     runs-on: ubuntu-latest
