@@ -2,9 +2,9 @@ name: test-report
 
 on:
   push:
-    branches: [ "main", "hw" ]
+    branches: [ "hw" ]
   pull_request:
-    branches: [ "main", "hw" ]
+    branches: [ "hw" ]
 
 jobs:
   build-and-test:
@@ -47,4 +47,24 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: allure-report
-          path: build/reports/allure-report/allureReport
+          path: build/reports/allure-report/
+
+      - name: Load test report history
+        uses: actions/checkout@v4
+        with:
+          ref: gh-pages
+          path: gh-pages
+
+      - name: Build allure test report
+        uses: simple-elf/allure-report-action@v1.7
+        with:
+          gh_pages: gh-pages
+          allure_history: allure-history
+          allure_results: build/allure-results
+
+      - name: Publish allure test report
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_branch: gh-pages
+          publish_dir: allure-history
