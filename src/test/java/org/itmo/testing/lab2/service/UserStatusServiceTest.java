@@ -1,16 +1,15 @@
 package org.itmo.testing.lab2.service;
 
-import org.junit.jupiter.api.*;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.CsvSource;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
-
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import org.junit.jupiter.api.*;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class UserStatusServiceTest {
@@ -26,11 +25,11 @@ public class UserStatusServiceTest {
 
     @ParameterizedTest
     @CsvSource({
-            "1, -10, Inactive",
-            "2, 0, Inactive",
-            "3, 50, Inactive",
-            "4, 100, Active",
-            "5, 150, Highly active"
+        "1, -10, Inactive",
+        "2, 0, Inactive",
+        "3, 50, Inactive",
+        "4, 100, Active",
+        "5, 150, Highly active"
     })
     public void testGetUserStatus_Active(int n, long activityTime, String expectedStatus) {
         // Настроим поведение mock-объекта
@@ -47,11 +46,11 @@ public class UserStatusServiceTest {
     public void getUserLastSessionDate() {
         LocalDateTime login = LocalDateTime.now().minusHours(1);
         LocalDateTime logout = LocalDateTime.now();
-        List<UserAnalyticsService.Session> sessions = List.of(
-                new UserAnalyticsService.Session(login.plusDays(1), logout.plusDays(1)),
-                new UserAnalyticsService.Session(login.plusDays(10), logout.plusDays(10)),
-                new UserAnalyticsService.Session(login, logout)
-        );
+        List<UserAnalyticsService.Session> sessions =
+                List.of(
+                        new UserAnalyticsService.Session(login.plusDays(1), logout.plusDays(1)),
+                        new UserAnalyticsService.Session(login.plusDays(10), logout.plusDays(10)),
+                        new UserAnalyticsService.Session(login, logout));
 
         when(userAnalyticsService.getUserSessions("user123")).thenReturn(sessions);
 
@@ -67,8 +66,10 @@ public class UserStatusServiceTest {
     public void getUserLastSessionDateNoSessions() {
         when(userAnalyticsService.getUserSessions("user123")).thenReturn(List.of());
 
-        NoSuchElementException exc = assertThrows(NoSuchElementException.class,
-                () -> userStatusService.getUserLastSessionDate("user123"));
+        NoSuchElementException exc =
+                assertThrows(
+                        NoSuchElementException.class,
+                        () -> userStatusService.getUserLastSessionDate("user123"));
         assertNull(exc.getMessage());
     }
 
@@ -76,11 +77,11 @@ public class UserStatusServiceTest {
     public void getUserLastSessionDateNotCorrectOrder() {
         LocalDateTime login = LocalDateTime.now().minusHours(1);
         LocalDateTime logout = LocalDateTime.now();
-        List<UserAnalyticsService.Session> sessions = List.of(
-                new UserAnalyticsService.Session(login, logout),
-                new UserAnalyticsService.Session(login.plusDays(1), logout.plusDays(1)),
-                new UserAnalyticsService.Session(login.plusDays(10), logout.plusDays(10))
-        );
+        List<UserAnalyticsService.Session> sessions =
+                List.of(
+                        new UserAnalyticsService.Session(login, logout),
+                        new UserAnalyticsService.Session(login.plusDays(1), logout.plusDays(1)),
+                        new UserAnalyticsService.Session(login.plusDays(10), logout.plusDays(10)));
 
         when(userAnalyticsService.getUserSessions("user123")).thenReturn(sessions);
 

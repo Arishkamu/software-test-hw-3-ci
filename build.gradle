@@ -2,6 +2,7 @@ plugins {
     id 'java'
     id 'jacoco'
     id 'io.qameta.allure' version "2.11.2"
+    id 'com.diffplug.spotless' version "6.22.0"
 }
 
 group = 'org.usvm'
@@ -48,5 +49,18 @@ allure {
                 enabled = true
             }
         }
+    }
+}
+
+spotless {
+    format 'misc', {
+        target '*.gradle', '.gitignore'
+
+        trimTrailingWhitespace()
+        endWithNewline()
+    }
+    java {
+        googleJavaFormat('1.19.2').aosp().reflowLongStrings().skipJavadocFormatting()
+        formatAnnotations()
     }
 }

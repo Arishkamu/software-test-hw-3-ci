@@ -34,7 +34,10 @@ public class UserAnalyticsService {
             throw new IllegalArgumentException("No sessions found for user");
         }
         return userSessions.get(userId).stream()
-                .mapToLong(session -> ChronoUnit.MINUTES.between(session.getLoginTime(), session.getLogoutTime()))
+                .mapToLong(
+                        session ->
+                                ChronoUnit.MINUTES.between(
+                                        session.getLoginTime(), session.getLogoutTime()))
                 .sum();
     }
 
@@ -60,11 +63,15 @@ public class UserAnalyticsService {
         Map<String, Long> activityByDay = new HashMap<>();
         userSessions.get(userId).stream()
                 .filter(session -> isSessionInMonth(session, month))
-                .forEach(session -> {
-                    String dayKey = session.getLoginTime().toLocalDate().toString();
-                    long minutes = ChronoUnit.MINUTES.between(session.getLoginTime(), session.getLogoutTime());
-                    activityByDay.put(dayKey, activityByDay.getOrDefault(dayKey, 0L) + minutes);
-                });
+                .forEach(
+                        session -> {
+                            String dayKey = session.getLoginTime().toLocalDate().toString();
+                            long minutes =
+                                    ChronoUnit.MINUTES.between(
+                                            session.getLoginTime(), session.getLogoutTime());
+                            activityByDay.put(
+                                    dayKey, activityByDay.getOrDefault(dayKey, 0L) + minutes);
+                        });
         return activityByDay;
     }
 
