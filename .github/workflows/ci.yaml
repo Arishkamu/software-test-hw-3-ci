@@ -2,12 +2,12 @@ name: test-report
 
 on:
   push:
-    branches: [ "hw" ]
+    branches: [ "main" ]
   pull_request:
-    branches: [ "hw" ]
+    branches: [ "main" ]
 
 jobs:
-  build-and-test:
+  build:
     runs-on: ubuntu-latest
 
     steps:
@@ -25,6 +25,10 @@ jobs:
         with:
           gradle-version: "8.10"
 
+  test-and-coverage:
+    runs-on: ubuntu-latest
+
+    steps:
       - name: Build and test with Gradle
         run: gradle build
 
@@ -32,7 +36,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: test-results
-          path: build/reports/
+          path: build/reports/tests/test/index.html
 
       - name: Upload JaCoCo report
         uses: actions/upload-artifact@v4
@@ -40,6 +44,10 @@ jobs:
           name: jacoco-report
           path: build/reports/jacoco/test/html/
 
+  allure-generate:
+    runs-on: ubuntu-latest
+
+    steps:
       - name: Generate Allure Report (Gradle)
         run: gradle allureReport
 
@@ -49,15 +57,25 @@ jobs:
           name: allure-report
           path: build/reports/allure-report/
 
-      - name: Build allure test report
+      - name: Load test report history
+        uses: actions/checkout@v3
+        if: always()
+        continue-on-error: true
+        with:
+          ref: gh-pages
+          path: gh-pages
+
+      - name: Build test report
         uses: simple-elf/allure-report-action@v1.7
+        if: always()
         with:
           gh_pages: gh-pages
           allure_history: allure-history
-          allure_results: build/reports/allure-report/allureReport
+          allure_results: build/allure-results
 
-      - name: Publish allure test report
+      - name: Publish test report
         uses: peaceiris/actions-gh-pages@v3
+        if: always()
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_branch: gh-pages
