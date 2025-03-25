@@ -1,7 +1,7 @@
 plugins {
     id 'java'
     id 'jacoco'
-    id 'io.qameta.allure-report' version "2.11.2"
+    id 'io.qameta.allure' version "2.11.2"
 }
 
 group = 'org.usvm'
@@ -41,7 +41,12 @@ jacocoTestReport {
 }
 
 allure {
-    report {
-        version = "2.25.0"
+    version = '2.25.0'
+    adapter {
+        frameworks {
+            junit5 {
+                enabled = true
+            }
+        }
     }
 }
