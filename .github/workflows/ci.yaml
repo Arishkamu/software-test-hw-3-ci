@@ -41,7 +41,7 @@ jobs:
           path: build/reports/jacoco/test/html/
 
       - name: Generate Allure Report (Gradle)
-        run: ./gradlew allureReport
+        run: gradle allureReport
 
       - name: Upload Allure Report
         uses: actions/upload-artifact@v4
