@@ -1,0 +1,47 @@
+name: test-report
+
+on:
+  push:
+    branches: [ "main", "hw" ]
+  pull_request:
+    branches: [ "main", "hw" ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+
+      - name: Set up Gradle 8.10
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: "8.10"
+
+      - name: Build and test with Gradle
+        run: gradle build
+
+      - name: Upload build reports
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results
+          path: build/reports/
+
+      - name: Upload JaCoCo report
+        uses: actions/upload-artifact@v4
+        with:
+          name: jacoco-report
+          path: build/reports/jacoco/test/html/
+
+      - name: Upload Allure Report
+        uses: actions/upload-artifact@v4
+        with:
+          name: allure-report
+          path: build/reports/allure-report
